@@ -42,7 +42,7 @@ The project is intentionally lightweight and focused on the core wallet and tran
 
 ## Screenshots
 
-Add these images to your repository to complete the showcase:
+Add these images to your repository to complete the showcase. The wallet-connected screenshot should be saved as `public/screenshots/wallet-connected.png` and used as the featured proof of wallet integration.
 
 | Preview | File |
 | --- | --- |
@@ -52,6 +52,14 @@ Add these images to your repository to complete the showcase:
 | Transaction success | `transaction-success.png` |
 | Transaction hash | `transaction-hash.png` |
 
+Required submission shots for judges:
+
+- Wallet connected state
+- Balance displayed
+- Successful Testnet transaction
+- Transaction result shown to the user
+- Transaction hash visible after success
+
 Example placeholders:
 
 ```md
@@ -60,6 +68,12 @@ Example placeholders:
 ![Send XLM](public/screenshots/send-xlm.png)
 ![Transaction Success](public/screenshots/transaction-success.png)
 ![Transaction Hash](public/screenshots/transaction-hash.png)
+```
+
+If you want to feature the wallet-connected state at the top of the README, add this line directly under the project intro:
+
+```md
+![StellarPay Wallet Connected](public/screenshots/wallet-connected.png)
 ```
 
 ## Installation Instructions
