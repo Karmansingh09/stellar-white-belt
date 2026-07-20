@@ -1,94 +1,119 @@
-# StellarPoll - Yellow Belt Submission
+# StellarPoll 🚀
 
-![Stellar](https://img.shields.io/badge/Built%20for-Stellar%20Yellow%20Belt-F59E0B?style=for-the-badge)
-![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=white)
-![Soroban](https://img.shields.io/badge/Soroban-Smart%20Contracts-8B5CF6?style=for-the-badge)
-![Freighter](https://img.shields.io/badge/Freighter%20Wallet-Compatible-0EA5E9?style=for-the-badge)
+A decentralized voting application built for the Stellar Yellow Belt Program.
 
-StellarPoll is a React + Vite Web3 dApp built for the **Stellar Monthly Builder Challenge - Yellow Belt Submission**. It demonstrates a full-stack integration with a **Soroban Smart Contract** on the **Stellar Testnet**, allowing users to vote on-chain using their Freighter wallet.
+## Live Demo
 
-Live Demo: https://stellar-yellow-belt-demo.vercel.app
+https://stellar-white-belt-git-yellow-belt-sarvodayas-projects.vercel.app
 
-Repository: https://github.com/Karmansingh09/stellar-yellow-belt
+## GitHub Repository
 
-## Project Overview
+https://github.com/Karmansingh09/stellar-white-belt
 
-StellarPoll fulfills the Yellow Belt requirements by interacting with a deployed Soroban smart contract. 
-
-1. Connect a Freighter wallet.
-2. View real-time polling data fetched from the smart contract.
-3. Submit a vote (`vote_a` or `vote_b`) by signing a Soroban transaction via Freighter.
-4. Display the resulting transaction hash and updated vote counts.
+---
 
 ## Features
 
-- **Soroban Integration**: Uses `@stellar/stellar-sdk` to simulate and submit transactions to a Soroban contract.
-- **On-Chain Voting**: Users can interact with the contract's `vote_a` and `vote_b` methods.
-- **Real-Time Polling**: The frontend polls the contract's `get_votes` method every 5 seconds to keep the UI in sync.
-- **Freighter Wallet**: Seamlessly connects to Freighter to approve transactions.
-- **Modern UI**: A responsive, animated, and clean interface to display the voting status.
+- Stellar Testnet support
+- Wallet connection
+- Vote A and Vote B functionality
+- Transaction status tracking
+- Transaction hash generation
+- Responsive UI
+- Vercel deployment
 
-## Smart Contract Details
-
-- **Network**: Stellar Testnet
-- **Contract ID**: `CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM`
-- **Methods**:
-  - `vote_a()`: Increments the vote count for Option A.
-  - `vote_b()`: Increments the vote count for Option B.
-  - `get_votes()`: Returns the current vote tallies.
-
-## Screenshots
-
-Required submission shots for judges:
-
-![Wallet Connected](public/screenshots/wallet-connected.png)
-![Voting Interface](public/screenshots/voting-interface.png)
-![Transaction Success](public/screenshots/transaction-success.png)
-![Transaction Hash](public/screenshots/transaction-hash.png)
-
-## Installation Instructions
-
-### Prerequisites
-
-- Node.js 18+
-- npm
-- Freighter Wallet browser extension
-- Freighter set to **Stellar Testnet**
-
-### Install Dependencies
-
-```bash
-npm install
-```
-
-## Running Locally
-
-Start the Vite development server on `localhost:5173`:
-
-```bash
-npm run dev
-```
-
-Open the app in your browser:
-
-```bash
-http://localhost:5173
-```
-
-Build the production version:
-
-```bash
-npm run build
-```
+---
 
 ## Tech Stack
 
-- **Frontend**: React, Vite, CSS
-- **Blockchain**: Stellar Soroban, `@stellar/stellar-sdk`
-- **Wallet**: Freighter Wallet
+- React
+- Vite
+- JavaScript
+- Stellar
+- Freighter Wallet
+- Vercel
 
-## Acknowledgements
+---
 
-- **Stellar & Soroban** for the ecosystem and smart contract platform.
-- **Freighter Wallet** for secure browser-based wallet integration.
-- The **Stellar Monthly Builder Challenge** for the Yellow Belt prompt!
+## Screenshots
+
+### Home Page
+
+![Home](![alt text](image.png))
+
+### Wallet Connected
+
+![Wallet Connected](![alt text](image-1.png))
+
+### Vote A
+
+![Vote A](![alt text](image-2.png))
+
+### Vote B
+
+![Vote B](![alt text](image-3.png))
+
+### Transaction Hash
+
+![Transaction Hash](![alt text](image-4.png))
+
+---
+
+## Installation
+
+```bash
+git clone https://github.com/Karmansingh09/stellar-white-belt.git
+cd stellar-white-belt
+npm install
+npm run dev
+```
+
+## Project Structure
+
+```text
+src/
+├── App.jsx
+├── App.css
+├── main.jsx
+
+screenshots/
+├── home.png
+├── wallet-connected.png
+├── vote-a.png
+├── vote-b.png
+└── transaction-hash.png
+```
+
+## Yellow Belt Requirements
+
+- [x] GitHub Repository
+- [x] Vercel Deployment
+- [x] Wallet Integration
+- [x] Voting Interface
+- [x] Transaction Status
+- [x] Transaction Hash Display
+- [x] README Documentation
+- [x] Screenshots Included
+
+---
+
+## Future Improvements
+
+- Real Soroban Smart Contract Integration
+- Multi-wallet Support
+- Real-time Vote Synchronization
+- On-chain Vote Storage
+- Event Tracking
+
+---
+
+## Author
+
+### Karman Singh Chandhok
+
+- GitHub: https://github.com/Karmansingh09
+- LinkedIn: https://www.linkedin.com/in/karman-singh-chandhok-b1262337b
+
+---
+
+Built for the Stellar Yellow Belt Program ⭐
