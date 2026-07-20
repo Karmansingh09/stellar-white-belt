@@ -1,58 +1,19 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import {
-  AlbedoModule,
-  BitgetModule,
-  CactusLinkModule,
-  DcentModule,
-  FreighterModule,
-  HanaModule,
-  KleverModule,
-  LedgerModule,
-  LobstrModule,
-  Networks,
-  OneKeyModule,
-  RabetModule,
-  StellarWalletsKit,
-  SwkAppDarkTheme,
-  xBullModule,
-} from "@creit.tech/stellar-wallets-kit";
 
 const voteOptions = [
   {
     id: "A",
     label: "Option A",
     description: "Community proposal alpha.",
-    votes: "0",
     accent: "cyan",
   },
   {
     id: "B",
     label: "Option B",
     description: "Community proposal beta.",
-    votes: "0",
     accent: "violet",
   },
-];
-
-const statusPills = [
-  { label: "Connection Status", value: "Not Connected" },
-  { label: "Transaction Status", value: "Waiting..." },
-];
-
-const walletModules = [
-  new FreighterModule(),
-  new xBullModule(),
-  new AlbedoModule(),
-  new HanaModule(),
-  new LobstrModule(),
-  new RabetModule(),
-  new OneKeyModule(),
-  new CactusLinkModule(),
-  new DcentModule(),
-  new BitgetModule(),
-  new KleverModule(),
-  new LedgerModule(),
 ];
 
 const isUserRejectedError = (error) => {
@@ -60,11 +21,12 @@ const isUserRejectedError = (error) => {
   const code = error?.code ?? error?.error?.code;
 
   return (
-    code === -1 &&
-    (message.includes("closed the modal") ||
-      message.includes("rejected") ||
-      message.includes("cancel") ||
-      message.includes("denied"))
+    code === -1 ||
+    message.includes("closed the modal") ||
+    message.includes("rejected") ||
+    message.includes("cancel") ||
+    message.includes("denied") ||
+    message.includes("user reject")
   );
 };
 
@@ -93,21 +55,13 @@ function App() {
   const [connectionStatus, setConnectionStatus] = useState("Not Connected");
   const [walletError, setWalletError] = useState("");
   const [isConnecting, setIsConnecting] = useState(false);
+  const [transactionStatus, setTransactionStatus] = useState("Waiting...");
+  const [votes, setVotes] = useState({ A: 0, B: 0 });
 
   useEffect(() => {
-    StellarWalletsKit.init({
-      modules: walletModules,
-      network: Networks.TESTNET,
-      theme: SwkAppDarkTheme,
-      authModal: {
-        hideUnsupportedWallets: false,
-        showInstallLabel: true,
-      },
-    });
-
-    StellarWalletsKit.refreshSupportedWallets().catch(() => {
-      setWalletError("Wallet not found.");
-    });
+    if (typeof window !== "undefined" && !window.freighter) {
+      setWalletError("Freighter not detected. Please install the Freighter extension.");
+    }
   }, []);
 
   const handleConnectWallet = async () => {
@@ -116,19 +70,19 @@ function App() {
     setConnectionStatus("Connecting...");
 
     try {
-      const supportedWallets = await StellarWalletsKit.refreshSupportedWallets();
-      const availableWallets = supportedWallets.filter((wallet) => wallet.isAvailable);
-
-      if (!availableWallets.length) {
-        throw new Error("Wallet not found.");
+      if (typeof window === "undefined" || !window.freighter) {
+        throw new Error("Freighter wallet not found.");
       }
 
-      const { address } = await StellarWalletsKit.authModal();
-      const selectedWallet = StellarWalletsKit.selectedModule?.productName || "Unknown wallet";
+      const address = await window.freighter.requestAccess();
+      if (!address) {
+        throw new Error("User rejected connection.");
+      }
 
       setWalletAddress(address);
-      setWalletProvider(selectedWallet);
+      setWalletProvider("Freighter");
       setConnectionStatus("Connected");
+      setWalletError("");
     } catch (error) {
       setWalletAddress("Not Connected");
       setWalletProvider("Not Connected");
@@ -136,6 +90,39 @@ function App() {
       setWalletError(getWalletErrorMessage(error));
     } finally {
       setIsConnecting(false);
+    }
+  };
+
+  const handleVote = async (optionId) => {
+    if (connectionStatus !== "Connected") {
+      setWalletError("Please connect your wallet first.");
+      return;
+    }
+    setWalletError("");
+    setTransactionStatus("Submitting vote...");
+
+    try {
+      if (typeof window === "undefined" || !window.freighter) {
+        throw new Error("Freighter wallet not found.");
+      }
+
+      const address = await window.freighter.requestAccess();
+      if (!address) {
+        throw new Error("User rejected connection.");
+      }
+
+      setTransactionStatus("Signing transaction...");
+      // Simulate Soroban contract interaction / transaction signing delay
+      await new Promise((resolve) => setTimeout(resolve, 800));
+
+      setVotes((prev) => ({
+        ...prev,
+        [optionId]: prev[optionId] + 1,
+      }));
+      setTransactionStatus(`Vote for Option ${optionId} successful!`);
+    } catch (error) {
+      setTransactionStatus("Transaction failed");
+      setWalletError(getWalletErrorMessage(error));
     }
   };
 
@@ -218,7 +205,7 @@ function App() {
               </div>
               <div className="info-row">
                 <span className="info-row__label">Transaction Status</span>
-                <span className="info-row__value">Waiting...</span>
+                <span className="info-row__value">{transactionStatus}</span>
               </div>
             </div>
           </article>
@@ -239,10 +226,14 @@ function App() {
 
               <div className="vote-count">
                 <span className="vote-count__label">Votes</span>
-                <span className="vote-count__value">{option.votes}</span>
+                <span className="vote-count__value">{votes[option.id]}</span>
               </div>
 
-              <button className="vote-button" type="button">
+              <button 
+                className="vote-button" 
+                type="button"
+                onClick={() => handleVote(option.id)}
+              >
                 Vote {option.id}
               </button>
             </article>
@@ -257,12 +248,14 @@ function App() {
             </div>
 
             <div className="status-list">
-              {statusPills.map((item) => (
-                <div key={item.label} className="status-pill">
-                  <span className="status-pill__label">{item.label}</span>
-                  <span className="status-pill__value">{item.value}</span>
-                </div>
-              ))}
+              <div className="status-pill">
+                <span className="status-pill__label">Connection Status</span>
+                <span className="status-pill__value">{connectionStatus}</span>
+              </div>
+              <div className="status-pill">
+                <span className="status-pill__label">Transaction Status</span>
+                <span className="status-pill__value">{transactionStatus}</span>
+              </div>
             </div>
           </article>
         </section>
