@@ -1,80 +1,50 @@
-# StellarPay
+# StellarPoll - Yellow Belt Submission
 
-![Stellar](https://img.shields.io/badge/Built%20for-Stellar%20White%20Belt-7DD3FC?style=for-the-badge)
+![Stellar](https://img.shields.io/badge/Built%20for-Stellar%20Yellow%20Belt-F59E0B?style=for-the-badge)
 ![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Soroban](https://img.shields.io/badge/Soroban-Smart%20Contracts-8B5CF6?style=for-the-badge)
 ![Freighter](https://img.shields.io/badge/Freighter%20Wallet-Compatible-0EA5E9?style=for-the-badge)
 
-StellarPay is a React + Vite Web3 app built for the **Stellar Monthly Builder Challenge** and the **Stellar White Belt Submission**. It connects to the **Freighter Wallet**, reads the wallet address and XLM balance on **Stellar Testnet**, and lets users send native XLM transactions with a clean, judge-friendly UI.
+StellarPoll is a React + Vite Web3 dApp built for the **Stellar Monthly Builder Challenge - Yellow Belt Submission**. It demonstrates a full-stack integration with a **Soroban Smart Contract** on the **Stellar Testnet**, allowing users to vote on-chain using their Freighter wallet.
 
-Live Demo: https://stellar-white-belt-sigma.vercel.app
+Live Demo: https://stellar-yellow-belt-demo.vercel.app
 
-Repository: https://github.com/Karmansingh09/stellar-white-belt
+Repository: https://github.com/Karmansingh09/stellar-yellow-belt
 
 ## Project Overview
 
-StellarPay demonstrates a simple end-to-end Stellar wallet experience for Testnet:
+StellarPoll fulfills the Yellow Belt requirements by interacting with a deployed Soroban smart contract. 
 
 1. Connect a Freighter wallet.
-2. Display the connected wallet address.
-3. Fetch the wallet's XLM balance from Stellar Testnet.
-4. Build, sign, and submit XLM payments.
-5. Show transaction status and hash after submission.
-
-The project is intentionally lightweight and focused on the core wallet and transaction flow judges care about in a hackathon submission.
+2. View real-time polling data fetched from the smart contract.
+3. Submit a vote (`vote_a` or `vote_b`) by signing a Soroban transaction via Freighter.
+4. Display the resulting transaction hash and updated vote counts.
 
 ## Features
 
-- Connect Freighter Wallet
-- Disconnect Wallet
-- Display connected Stellar address
-- Fetch and display XLM balance from Stellar Testnet
-- Send XLM transactions on Testnet
-- Show transaction success or failure
-- Show the transaction hash after a successful transfer
-- Responsive, modern, simple UI
-- Console logs for wallet and transaction debugging
+- **Soroban Integration**: Uses `@stellar/stellar-sdk` to simulate and submit transactions to a Soroban contract.
+- **On-Chain Voting**: Users can interact with the contract's `vote_a` and `vote_b` methods.
+- **Real-Time Polling**: The frontend polls the contract's `get_votes` method every 5 seconds to keep the UI in sync.
+- **Freighter Wallet**: Seamlessly connects to Freighter to approve transactions.
+- **Modern UI**: A responsive, animated, and clean interface to display the voting status.
 
-## Demo Links
+## Smart Contract Details
 
-- Live Demo: https://stellar-white-belt-sigma.vercel.app
-- GitHub Repository: https://github.com/Karmansingh09/stellar-white-belt
+- **Network**: Stellar Testnet
+- **Contract ID**: `CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM`
+- **Methods**:
+  - `vote_a()`: Increments the vote count for Option A.
+  - `vote_b()`: Increments the vote count for Option B.
+  - `get_votes()`: Returns the current vote tallies.
 
 ## Screenshots
 
-Add these images to your repository to complete the showcase. The wallet-connected screenshot should be saved as `public/screenshots/wallet-connected.png` and used as the featured proof of wallet integration.
-
-| Preview | File |
-| --- | --- |
-| Wallet connected | `wallet-connected.png` |
-| Balance displayed | `balance-displayed.png` |
-| Send XLM form | `send-xlm.png` |
-| Transaction success | `transaction-success.png` |
-| Transaction hash | `transaction-hash.png` |
-
 Required submission shots for judges:
 
-- Wallet connected state
-- Balance displayed
-- Successful Testnet transaction
-- Transaction result shown to the user
-- Transaction hash visible after success
-
-Example placeholders:
-
-```md
 ![Wallet Connected](public/screenshots/wallet-connected.png)
-![Balance Displayed](public/screenshots/balance-displayed.png)
-![Send XLM](public/screenshots/send-xlm.png)
+![Voting Interface](public/screenshots/voting-interface.png)
 ![Transaction Success](public/screenshots/transaction-success.png)
 ![Transaction Hash](public/screenshots/transaction-hash.png)
-```
-
-If you want to feature the wallet-connected state at the top of the README, add this line directly under the project intro:
-
-```md
-![StellarPay Wallet Connected](public/screenshots/wallet-connected.png)
-```
 
 ## Installation Instructions
 
@@ -84,7 +54,6 @@ If you want to feature the wallet-connected state at the top of the README, add 
 - npm
 - Freighter Wallet browser extension
 - Freighter set to **Stellar Testnet**
-- Testnet account funded with XLM
 
 ### Install Dependencies
 
@@ -112,86 +81,14 @@ Build the production version:
 npm run build
 ```
 
-Preview the production build locally:
-
-```bash
-npm run preview
-```
-
-## Project Structure
-
-```text
-stellarpay/
-├── public/
-├── src/
-│   ├── App.jsx
-│   ├── App.css
-│   ├── index.css
-│   └── main.jsx
-├── index.html
-├── package.json
-├── vite.config.js
-└── README.md
-```
-
-## Stellar Testnet Configuration
-
-StellarPay is configured for **Stellar Testnet** and uses Freighter for wallet access.
-
-### Wallet Requirements
-
-- Freighter Wallet installed in the browser
-- Freighter network set to **Testnet**
-- Permission granted when prompted by the app
-
-### Network Details
-
-```js
-Networks.TESTNET
-```
-
-### Horizon API
-
-The app uses the Stellar Testnet Horizon endpoint for account lookup, balance fetching, fee estimation, and transaction submission:
-
-```js
-https://horizon-testnet.stellar.org
-```
-
-### Freighter Flow
-
-The wallet flow used by the app is:
-
-```js
-isAllowed() -> requestAccess() -> getAddress() -> signTransaction()
-```
-
 ## Tech Stack
 
-- React
-- Vite
-- JavaScript
-- Stellar SDK
-- Freighter Wallet API
-- Vercel
-
-## Future Improvements
-
-- Add multi-asset support beyond native XLM
-- Add transaction history and recent activity
-- Add QR code or paste-shortcut support for recipient addresses
-- Add memo support for exchanges and memo-required accounts
-- Add better validation for Stellar addresses and amounts
-- Add network status and account loading indicators
+- **Frontend**: React, Vite, CSS
+- **Blockchain**: Stellar Soroban, `@stellar/stellar-sdk`
+- **Wallet**: Freighter Wallet
 
 ## Acknowledgements
 
-- **Stellar** for the ecosystem, SDK, and Testnet tooling
-- **Freighter Wallet** for secure browser-based wallet integration
-- The **Stellar Monthly Builder Challenge** for the submission prompt and inspiration
-
-## License
-
-This project is currently intended for challenge submission and demo purposes.
-
-If you plan to publish or reuse it publicly, add a license file such as **MIT** or **Apache 2.0**.
+- **Stellar & Soroban** for the ecosystem and smart contract platform.
+- **Freighter Wallet** for secure browser-based wallet integration.
+- The **Stellar Monthly Builder Challenge** for the Yellow Belt prompt!
