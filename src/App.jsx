@@ -1,169 +1,147 @@
-import "./App.css";
-import { useState } from "react";
+import './index.css';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { CheckCircle, X, AlertCircle } from 'lucide-react';
 
-function App() {
-  const [walletAddress, setWalletAddress] = useState("Not Connected");
-  const [walletProvider, setWalletProvider] = useState("Not Connected");
-  const [connectionStatus, setConnectionStatus] = useState("Not Connected");
-  const [walletError, setWalletError] = useState("");
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import VotingCard from './components/VotingCard';
+import WalletCard from './components/WalletCard';
+import TransactionTable from './components/TransactionTable';
+import Footer from './components/Footer';
 
-  const [voteA, setVoteA] = useState(0);
-  const [voteB, setVoteB] = useState(0);
+import { checkWalletConnection, connectFreighterWallet } from './services/stellar';
 
-  const [transactionStatus, setTransactionStatus] = useState("Waiting...");
-  const [transactionHash, setTransactionHash] = useState("----");
-
-  const handleConnectWallet = async () => {
-    try {
-      setWalletAddress(
-        "GCS2WX4AD4BZVNRUAXFXA4PSGMAPWU2VLU3INZP3FGTKQYPMW32WP2M"
-      );
-      setWalletProvider("Freighter");
-      setConnectionStatus("Connected");
-      setWalletError("");
-    } catch (error) {
-      setConnectionStatus("Failed");
-      setWalletError("Connection failed.");
-    }
-  };
-
-  const generateHash = () => {
-    return (
-      "TX-" +
-      Math.random().toString(36).substring(2, 15).toUpperCase()
-    );
-  };
-
-  const handleVoteA = () => {
-    setVoteA((prev) => prev + 1);
-    setTransactionStatus("Success");
-    setTransactionHash(generateHash());
-  };
-
-  const handleVoteB = () => {
-    setVoteB((prev) => prev + 1);
-    setTransactionStatus("Success");
-    setTransactionHash(generateHash());
-  };
-
+function Toast({ message, isError, show, onClose }) {
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#071226",
-        color: "white",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        fontFamily: "Arial",
-      }}
-    >
-      <div
-        style={{
-          width: "700px",
-          padding: "40px",
-          borderRadius: "20px",
-          background: "#0d1b33",
-          boxShadow: "0 0 20px rgba(0,0,0,0.3)",
-        }}
-      >
-        <h1 style={{ textAlign: "center" }}>StellarPoll 🚀</h1>
-
-        <p style={{ textAlign: "center", marginBottom: "30px" }}>
-          Vote on-chain using Stellar Testnet.
-        </p>
-
-        <button
-          onClick={handleConnectWallet}
-          style={{
-            width: "100%",
-            padding: "15px",
-            border: "none",
-            borderRadius: "10px",
-            background: "#38bdf8",
-            cursor: "pointer",
-            fontWeight: "bold",
-          }}
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          initial={{ opacity: 0, y: 80, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 80, scale: 0.9 }}
+          transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+          className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 rounded-2xl glass border shadow-card max-w-sm ${
+            isError ? 'border-red-500/30 text-red-200' : 'border-emerald-500/30 text-emerald-200'
+          }`}
         >
-          Connect Wallet
-        </button>
-
-        <div
-          style={{
-            marginTop: "30px",
-            padding: "20px",
-            border: "1px solid #334155",
-            borderRadius: "10px",
-          }}
-        >
-          <h2>Wallet Details</h2>
-
-          <p>
-            <strong>Wallet Address:</strong>
-          </p>
-          <p>{walletAddress}</p>
-
-          <p>
-            <strong>Wallet Provider:</strong> {walletProvider}
-          </p>
-
-          <p>
-            <strong>Connection Status:</strong> {connectionStatus}
-          </p>
-
-          {walletError && (
-            <p style={{ color: "red" }}>
-              <strong>Error:</strong> {walletError}
-            </p>
+          {isError ? (
+            <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+          ) : (
+            <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
           )}
-        </div>
-
-        <div
-          style={{
-            marginTop: "30px",
-            padding: "20px",
-            border: "1px solid #334155",
-            borderRadius: "10px",
-          }}
-        >
-          <h2>Poll Options</h2>
-
-          <div style={{ marginBottom: "20px" }}>
-            <h3>Option A</h3>
-            <p>Community proposal alpha.</p>
-            <button onClick={handleVoteA}>Vote A</button>
-            <p>Votes: {voteA}</p>
-          </div>
-
-          <div>
-            <h3>Option B</h3>
-            <p>Community proposal beta.</p>
-            <button onClick={handleVoteB}>Vote B</button>
-            <p>Votes: {voteB}</p>
-          </div>
-        </div>
-
-        <div
-          style={{
-            marginTop: "30px",
-            padding: "20px",
-            border: "1px solid #334155",
-            borderRadius: "10px",
-          }}
-        >
-          <h2>Transaction Details</h2>
-
-          <p>
-            <strong>Status:</strong> {transactionStatus}
-          </p>
-
-          <p>
-            <strong>Hash:</strong> {transactionHash}
-          </p>
-        </div>
-      </div>
-    </div>
+          <p className="text-sm font-medium text-white flex-1">{message}</p>
+          <button onClick={onClose} className="text-slate-500 hover:text-white transition-colors ml-1">
+            <X className="w-4 h-4" />
+          </button>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
-export default App;
+export default function App() {
+  const [isConnected, setIsConnected] = useState(false);
+  const [walletAddress, setWalletAddress] = useState('');
+  const [toast, setToast] = useState({ show: false, message: '', isError: false });
+
+  const showToast = (message, isError = false) => {
+    setToast({ show: true, message, isError });
+    setTimeout(() => setToast({ show: false, message: '', isError: false }), 4000);
+  };
+
+  useEffect(() => {
+    checkWalletConnection().then((res) => {
+      if (res.isConnected && res.address) {
+        setIsConnected(true);
+        setWalletAddress(res.address);
+      }
+    });
+  }, []);
+
+  const handleConnectWallet = async () => {
+    if (isConnected) {
+      setIsConnected(false);
+      setWalletAddress('');
+      showToast('Freighter wallet disconnected.');
+      return;
+    }
+
+    try {
+      const address = await connectFreighterWallet();
+      setWalletAddress(address);
+      setIsConnected(true);
+      showToast(`Freighter connected! (${address.slice(0, 6)}...${address.slice(-4)})`);
+    } catch (err) {
+      console.error('Wallet connection failed:', err);
+      showToast(err.message || 'Freighter connection failed. Make sure Freighter is installed & unlocked.', true);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-stellar-dark text-white">
+      {/* Background mesh gradient */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div
+          className="absolute inset-0 opacity-40"
+          style={{
+            background:
+              'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59,130,246,0.12) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 80% 80%, rgba(139,92,246,0.08) 0%, transparent 60%)',
+          }}
+        />
+      </div>
+
+      {/* Navbar */}
+      <Navbar
+        isConnected={isConnected}
+        walletAddress={walletAddress}
+        onConnectWallet={handleConnectWallet}
+      />
+
+      {/* Main Content */}
+      <main className="relative z-10">
+        {/* Hero */}
+        <Hero onConnectWallet={handleConnectWallet} isConnected={isConnected} />
+
+        {/* Voting + Wallet Section */}
+        <section id="voting" className="py-20 px-4 sm:px-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              {/* Voting Card */}
+              <div className="lg:col-span-7">
+                <VotingCard
+                  isConnected={isConnected}
+                  walletAddress={walletAddress}
+                  onConnect={handleConnectWallet}
+                />
+              </div>
+
+              {/* Wallet Card */}
+              <div className="lg:col-span-5">
+                <WalletCard
+                  walletAddress={walletAddress}
+                  isConnected={isConnected}
+                  onConnect={handleConnectWallet}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Recent On-Chain Transactions */}
+        <TransactionTable />
+      </main>
+
+      {/* Footer */}
+      <Footer />
+
+      {/* Toast Notification */}
+      <Toast
+        show={toast.show}
+        message={toast.message}
+        isError={toast.isError}
+        onClose={() => setToast({ show: false, message: '', isError: false })}
+      />
+    </div>
+  );
+}
