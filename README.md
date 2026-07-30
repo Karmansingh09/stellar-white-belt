@@ -59,23 +59,23 @@ pub fn get_votes(env: Env) -> (u32, u32)
 
 ### Home Page
 
-![Home](image.png)
+![Home]![alt text](image-5.png)
 
 ### Wallet Connected
 
-![Wallet Connected](image-1.png)
+![Wallet Connected](image-6.png)
 
 ### Vote A
 
-![Vote A](image-2.png)
+![Vote A](![alt text](image-7.png)
 
-### Vote B
+### comfirm transaction
 
-![Vote B](image-3.png)
+![transaction](![alt text](image-8.png)
 
 ### Transaction Hash
 
-![Transaction Hash](image-4.png)
+![Transaction Hash](![alt text](image-9.png)
 
 ---
 
